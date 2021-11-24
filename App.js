@@ -8,7 +8,10 @@
 
 import React from 'react';
 import type {Node} from 'react';
+import Crashes from 'appcenter-crashes'
+import Analytics from 'appcenter-analytics'
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -26,72 +29,87 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+// const Section = ({children, title}): Node => {
+//   const isDarkMode = useColorScheme() === 'dark';
+//   return (
+//     <View style={styles.sectionContainer}>
+//       <Text
+//         style={[
+//           styles.sectionTitle,
+//           {
+//             color: isDarkMode ? Colors.white : Colors.black,
+//           },
+//         ]}>
+//         {title}
+//       </Text>
+//       <Text
+//         style={[
+//           styles.sectionDescription,
+//           {
+//             color: isDarkMode ? Colors.light : Colors.dark,
+//           },
+//         ]}>
+//         {children}
+//       </Text>
+//     </View>
+//   );
+// };
+
+
+// const isDarkMode = useColorScheme() === 'dark';
+
+// const backgroundStyle = {
+//   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+// };
+
+ class App extends React.Component  {
+
+  constructor(){
+    super();
+
+    this.checkPreviousSession()
+  }
+
+  async  checkPreviousSession(){
+
+    const didCrashHappend = await Crashes.hasCrashedInLastSession();
+    if(didCrashHappend){
+      //alert("Sorry about that crash, we are working on it")
+    }
+  }
+
+
+  render(){
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    <SafeAreaView style={styles.backgroundStyle}>
+      <StatusBar barStyle={ 'light-content' } />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
+        style={styles.backgroundStyle}>
         <Header />
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            backgroundColor: Colors.black 
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+            <Button title="Hello Crash me" onPress={()=> { Crashes.generateTestCrash()}}></Button>
+            <Button title="Send Analytics" onPress={()=> { 
+              Analytics.trackEvent("Button Clicks",{Internet:'Wi-fi',Location:"Off"});
+              
+              // Analytics.trackEvent("Button_Click_Add")
+              }}></Button>
+         
         </View>
       </ScrollView>
     </SafeAreaView>
   );
+        }
 };
 
+
 const styles = StyleSheet.create({
-  sectionContainer: {
+  backgroundStyle: {
+    backgroundColor:  Colors.darker  
+  },sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
   },
