@@ -93,7 +93,7 @@ import {
           }}>
             <Button title="Hello Crash me" onPress={()=> { Crashes.generateTestCrash()}}></Button>
             <Button title="Send Analytics" onPress={()=> { 
-              Analytics.trackEvent("Button Clicks",{Internet:'Wi-fi',Location:"Off"});
+              Analytics.trackEvent("Button Clicks on Android",{Internet:'Wi-fi',Location:"Off"});
               
               // Analytics.trackEvent("Button_Click_Add")
               }}></Button>
